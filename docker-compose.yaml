@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: my-react-frontend
+    container_name: frontend-healtcare
     ports:
       - "3000:80"
 
