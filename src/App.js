@@ -3,69 +3,69 @@ import axios from 'axios';
 import { useDropzone } from 'react-dropzone';
 
 const ChatWidget = () => {
-	const [isOpen, setIsOpen] = useState(false);
-	const [response, setResponse] = useState('');
-	const [file, setFile] = useState(null);
-	const [query, setQuery] = useState('');
-	const [uploading, setUploading] = useState(false);
-	const [searching, setSearching] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [response, setResponse] = useState('');
+  const [file, setFile] = useState(null);
+  const [query, setQuery] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [searching, setSearching] = useState(false);
 
-	// Toggle widget open/close
-	const toggleWidget = () => setIsOpen(!isOpen);
+  // Toggle widget open/close
+  const toggleWidget = () => setIsOpen(!isOpen);
 
-	// Handle file drop/selection
-	const onDrop = (acceptedFiles) => {
-		setFile(acceptedFiles[0]);
-	};
+  // Handle file drop/selection
+  const onDrop = (acceptedFiles) => {
+    setFile(acceptedFiles[0]);
+  };
 
-	const { getRootProps, getInputProps } = useDropzone({
-		onDrop,
-		accept: '.pdf, .docx',
-	});
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: '.pdf, .docx',
+  });
 
-	// File upload API call
-	const handleFileUpload = async () => {
-		if (!file) {
-			alert("Please select a file first!");
-			return;
-		}
-		setUploading(true);
-		const formData = new FormData();
-		formData.append('file', file);
+  // File upload API call
+  const handleFileUpload = async () => {
+    if (!file) {
+      alert("Please select a file first!");
+      return;
+    }
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
 
-		try {
-			const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/healthcare/upload-report`, formData, {
-				headers: { 'Content-Type': 'multipart/form-data' },
-			});
-			alert("File uploaded successfully!");
-			console.log("Upload response:", data);
-		} catch (error) {
-			console.error('Error uploading file:', error);
-		} finally {
-			setUploading(false);
-		}
-	};
+    try {
+      const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/healthcare/upload-report`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      alert("File uploaded successfully!");
+      console.log("Upload response:", data);
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    } finally {
+      setUploading(false);
+    }
+  };
 
-	// Query submission API call
-	const handleQuerySubmit = async () => {
-		if (!query) {
-			alert("Please enter a query!");
-			return;
-		}
-		setSearching(true);
-		try {
-			const { data } = await axios.get('http://127.0.0.1:8000/healthcare/search', {
-				params: { query },
-			});
-			setResponse(data.result);
-		} catch (error) {
-			console.error('Error fetching response:', error);
-		} finally {
-			setSearching(false);
-		}
-	};
+  // Query submission API call
+  const handleQuerySubmit = async () => {
+    if (!query) {
+      alert("Please enter a query!");
+      return;
+    }
+    setSearching(true);
+    try {
+      const { data } = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/healthcare/search`, {
+        params: { query },
+      });
+      setResponse(data.result);
+    } catch (error) {
+      console.error('Error fetching response:', error);
+    } finally {
+      setSearching(false);
+    }
+  };
 
-	return (
+  return (
     <>
       {/* 
         Minimal Floating Button 
@@ -200,13 +200,13 @@ const ChatWidget = () => {
                 borderRadius: '4px',
                 height: '150px',
                 overflowY: 'auto',
-		whiteSpace: 'pre-wrap',
+                whiteSpace: 'pre-wrap',
               }}
             >
               <strong>Response:</strong>
               <p style={{ margin: '5px 0 0 0' }}>{response}</p>
             </div>
-	  )}
+          )}
         </div>
       )}
     </>
