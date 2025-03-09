@@ -9,6 +9,8 @@ const ChatWidget = () => {
   const [query, setQuery] = useState('');
   const [uploading, setUploading] = useState(false);
   const [searching, setSearching] = useState(false);
+  const [indexName, setIndexName] = useState(''); // New state for index_name
+
 
   // Toggle widget open/close
   const toggleWidget = () => setIsOpen(!isOpen);
@@ -37,6 +39,7 @@ const ChatWidget = () => {
       const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/healthcare/upload-report`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+      setIndexName(data.index_name);
       alert("File uploaded successfully!");
       console.log("Upload response:", data);
     } catch (error) {
@@ -46,16 +49,22 @@ const ChatWidget = () => {
     }
   };
 
-  // Query submission API call
   const handleQuerySubmit = async () => {
     if (!query) {
       alert("Please enter a query!");
       return;
     }
+    if (!indexName) {
+      alert("Please upload a file first!");
+      return;
+    }
     setSearching(true);
     try {
       const { data } = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/healthcare/search`, {
-        params: { query },
+        params: {
+          query,
+          index_name: indexName // Include index_name in the query params
+        },
       });
       setResponse(data.result);
     } catch (error) {
